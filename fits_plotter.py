@@ -69,7 +69,7 @@ class FITSPlotter:
             "legend.fontsize": 14,  # Tamaño de fuente en leyenda
             "figure.dpi": 300  # Alta resolución
         })
-
+ 
         # Crear la figura y ajustar tamaño
         fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': self.wcs_base})
 
