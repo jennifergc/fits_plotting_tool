@@ -1,0 +1,111 @@
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	data_update: version installed or checked less than 1 day ago, nothing updated or checked
+2025-02-19 19:58:46	INFO	::casa	measures_update: version installed or checked less than 1 day ago, nothing updated or checked
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	Python version 3.10.12
+2025-02-19 19:58:46	INFO	::casa	CASA Version CASALITH 6.6.5.31
+2025-02-19 19:58:46	INFO	::casa	optional configuration file not found, continuing CASA startup without it
+2025-02-19 19:58:46	INFO	::casa	loaded config file : /home/jennifer/.local/lib/python3.10/site-packages/casaconfig/config.py
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	config values
+2025-02-19 19:58:46	INFO	::casa	    agg = False
+2025-02-19 19:58:46	INFO	::casa	    cachedir = '/home/jennifer/.casa'
+2025-02-19 19:58:46	INFO	::casa	    casaconfig_verbose = 1
+2025-02-19 19:58:46	INFO	::casa	    colors = 'Neutral'
+2025-02-19 19:58:46	INFO	::casa	    data_auto_update = True
+2025-02-19 19:58:46	INFO	::casa	    datapath = ['/home/jennifer/.casa/data']
+2025-02-19 19:58:46	INFO	::casa	    iplog = False
+2025-02-19 19:58:46	INFO	::casa	    iplogfile = '/home/jennifer/fits_plotting_tool/ipython-20250219-195845.log'
+2025-02-19 19:58:46	INFO	::casa	    log2term = False
+2025-02-19 19:58:46	INFO	::casa	    logfile = '/home/jennifer/fits_plotting_tool/casa-20250219-195845.log'
+2025-02-19 19:58:46	INFO	::casa	    measures_auto_update = True
+2025-02-19 19:58:46	INFO	::casa	    measurespath = '/home/jennifer/.casa/data'
+2025-02-19 19:58:46	INFO	::casa	    nogui = True
+2025-02-19 19:58:46	INFO	::casa	    nologfile = False
+2025-02-19 19:58:46	INFO	::casa	    nologger = True
+2025-02-19 19:58:46	INFO	::casa	    pipeline = False
+2025-02-19 19:58:46	INFO	::casa	    startupfile = '/home/jennifer/.casa/startup.py'
+2025-02-19 19:58:46	INFO	::casa	    user_site = False
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	casarundata version : casarundata-2025.01.22-1.tar.gz
+2025-02-19 19:58:46	INFO	::casa	measures version : WSRT_Measures_20250218-160001.ztar
+2025-02-19 19:58:46	INFO	::casa	
+2025-02-19 19:58:46	INFO	::casa	Checking Measures tables in data repository sub-directory /home/jennifer/.casa/data/geodetic
+2025-02-19 19:58:46	INFO	::casa	  IERSeop2000 (version date, last date in table (UTC)): 2025/01/18/15:15, 2024/12/19/00:00:00
+2025-02-19 19:58:46	INFO	::casa	  IERSeop97 (version date, last date in table (UTC)): 2025/01/18/15:15, 2024/12/19/00:00:00
+2025-02-19 19:58:46	INFO	::casa	  IERSpredict (version date, last date in table (UTC)): 2025/02/18/15:15, 2025/05/19/00:00:00
+2025-02-19 19:58:46	INFO	::casa	  TAI_UTC (version date, last date in table (UTC)): 2025/02/04/15:15, 2017/01/01/00:00:00
+2025-02-19 19:58:46	INFO	importfits::::casa	##########################################
+2025-02-19 19:58:46	INFO	importfits::::casa	##### Begin Task: importfits         #####
+2025-02-19 19:58:46	INFO	importfits::::casa	importfits( fitsimage='/home/jennifer/casa/M17_P2019/ALMA01480118_m0_nomask.fits', imagename='imagen_casa.im', whichrep=0, whichhdu=-1, zeroblanks=True, overwrite=True, defaultaxes=False, defaultaxesvalues=[], beam=[] )
+2025-02-19 19:58:46	INFO	importfits::::ImageFITSConverter	Processing HDU 0
+2025-02-19 19:58:46	INFO	importfits::ImageFITSConverterImpl::FITSToImage 	Created image of shape [472, 392, 1, 1]
+2025-02-19 19:58:46	INFO	importfits::ImageFITSConverterImpl::FITSToImage 	Copy FITS file to '/home/jennifer/fits_plotting_tool/imagen_casa.im' All pixels fit in memory (185024 pixels).
+2025-02-19 19:58:46	INFO	importfits::ImageFITSConverterImpl::FITSToImage 	Storing mask with name 'mask0'
+2025-02-19 19:58:46	INFO	importfits::::casa	Task importfits complete. Start time: 2025-02-19 13:58:46.036870 End time: 2025-02-19 13:58:46.060022
+2025-02-19 19:58:46	INFO	importfits::::casa	##### End Task: importfits           #####
+2025-02-19 19:58:46	INFO	importfits::::casa	##########################################
+2025-02-19 19:58:46	INFO	imstat::::casa	##########################################
+2025-02-19 19:58:46	INFO	imstat::::casa	##### Begin Task: imstat             #####
+2025-02-19 19:58:46	INFO	imstat::::casa	imstat( imagename='imagen_casa.im', axes=[], region='', box='', chans='', stokes='', listit=True, verbose=True, mask='', stretch=False, logfile='', append=True, algorithm='classic', fence=-1.0, center='mean', lside=True, zscore=-1.0, maxiter=-1, clmethod='auto', niter=3 )
+2025-02-19 19:58:46	INFO	imstat::CasacRegionManager::fromBCS	No directional region specified. Using full positional plane.
+2025-02-19 19:58:46	INFO	imstat::CasacRegionManager::fromBCS	Using all spectral channels.
+2025-02-19 19:58:46	INFO	imstat::CasacRegionManager::fromBCS	Using polarizations ALL
+2025-02-19 19:58:46	INFO	imstat::image::statistics 	Determining stats for image imagen_casa.im
+2025-02-19 19:58:46	INFO	imstat::ImageRegion::fromRecord	Selected bounding box : 
+2025-02-19 19:58:46	INFO	imstat::ImageRegion::fromRecord+	    [0, 0, 0, 0] to [471, 391, 0, 0]  (18:20:25.565, -16.11.53.860, 2.195358e+11Hz, I to 18:20:22.459, -16.11.16.715, 2.195358e+11Hz, I)
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	Statistics calculated using Classic algorithm
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	Regions --- 
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	         -- bottom-left corner (pixel) [blc]:  [0, 0, 0, 0]
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	         -- top-right corner (pixel) [trc]:    [471, 391, 0, 0]
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	         -- bottom-left corner (world) [blcf]: 18:20:25.565, -16.11.53.860, 2.195358e+11Hz, I
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::_logStartup	         -- top-right corner (world) [trcf]:   18:20:22.459, -16.11.16.715, 2.195358e+11Hz, I
+2025-02-19 19:58:46	INFO	imstat::::	Values --- 
+2025-02-19 19:58:46	INFO	imstat::::	         -- flux [flux]:                            395.613 Jy.km/s
+2025-02-19 19:58:46	INFO	imstat::::	         -- number of points [npts]:                144270
+2025-02-19 19:58:46	INFO	imstat::::	         -- maximum value [max]:                    0.813448 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	         -- minimum value [min]:                    -0.388245 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	         -- position of max value (pixel) [maxpos]: [119, 190, 0, 0]
+2025-02-19 19:58:46	INFO	imstat::::	         -- position of min value (pixel) [minpos]: [333, 360, 0, 0]
+2025-02-19 19:58:46	INFO	imstat::::	         -- position of max value (world) [maxposf]: 18:20:24.780, -16.11.35.810, 2.195358e+11Hz, I
+2025-02-19 19:58:46	INFO	imstat::::	         -- position of min value (world) [minposf]: 18:20:23.369, -16.11.19.660, 2.195358e+11Hz, I
+2025-02-19 19:58:46	INFO	imstat::::	         -- Sum of pixel values [sum]:               17374.7 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	         -- Sum of squared pixel values [sumsq]:     7321.24 Jy/beam.km/s.Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	Statistics --- 
+2025-02-19 19:58:46	INFO	imstat::::	        -- Mean of the pixel values [mean]:         0.120432 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Variance of the pixel values :           0.0362432 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Standard deviation of the Mean [sigma]:  0.190376 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Root mean square [rms]:                  0.225271 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Median of the pixel values [median]:     0.0672033 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Median of the deviations [medabsdevmed]: 0.114145 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- IQR [quartile]:                          0.282869 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- First quartile [q1]:                     -0.018061 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::::	        -- Third quartile [q3]:                     0.264808 Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics	Sum column unit = Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics+	Mean column unit = Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics+	Std_dev column unit = Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics+	Minimum column unit = Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics+	Maximum column unit = Jy/beam.km/s
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics	Npts          Sum           Mean          Rms           Std_dev       Minimum       Maximum     
+2025-02-19 19:58:46	INFO	imstat::ImageStatsCalculator::statistics	 1.442700e+05  1.737473e+04  1.204321e-01  2.252705e-01  1.903764e-01 -3.882454e-01  8.134480e-01
+2025-02-19 19:58:46	INFO	imstat::::casa	Task imstat complete. Start time: 2025-02-19 13:58:46.064986 End time: 2025-02-19 13:58:46.083185
+2025-02-19 19:58:46	INFO	imstat::::casa	##### End Task: imstat               #####
+2025-02-19 19:58:46	INFO	imstat::::casa	##########################################
+2025-02-19 19:58:46	INFO	immath::::casa	##########################################
+2025-02-19 19:58:46	INFO	immath::::casa	##### Begin Task: immath             #####
+2025-02-19 19:58:46	INFO	immath::::casa	immath( imagename='imagen_casa.im', mode='evalexpr', outfile='contornos.im', expr='iif(imagen_casa.im > 0.0017836919239488246, 1, 0)', varnames='', sigma='0.0mJy/beam', polithresh='', mask='', region='', box='', chans='', stokes='', stretch=False, imagemd='', prec='float' )
+2025-02-19 19:58:46	INFO	ImageExprCalculator::_imagecalc	Creating image `contornos.im' of shape [472, 392, 1, 1]
+2025-02-19 19:58:46	INFO	ImageMaskAttacher::makeMask	Created mask `mask0'
+2025-02-19 19:58:46	INFO	immath::::casa	Task immath complete. Start time: 2025-02-19 13:58:46.089296 End time: 2025-02-19 13:58:46.110867
+2025-02-19 19:58:46	INFO	immath::::casa	##### End Task: immath               #####
+2025-02-19 19:58:46	INFO	immath::::casa	##########################################
+2025-02-19 19:58:46	INFO	exportfits::::casa	##########################################
+2025-02-19 19:58:46	INFO	exportfits::::casa	##### Begin Task: exportfits         #####
+2025-02-19 19:58:46	INFO	exportfits::::casa	exportfits( imagename='contornos.im', fitsimage='-3,3,5,10,20,50,90,150', velocity=False, optical=False, bitpix=-32, minpix=0, maxpix=-1, overwrite=True, dropstokes=False, stokeslast=True, history=True, dropdeg=False )
+2025-02-19 19:58:46	INFO	exportfits::ImageFactory::toFITS	Applying mask of name 'mask0'
+2025-02-19 19:58:46	INFO	exportfits::::casa	Task exportfits complete. Start time: 2025-02-19 13:58:46.112866 End time: 2025-02-19 13:58:46.115929
+2025-02-19 19:58:46	INFO	exportfits::::casa	##### End Task: exportfits           #####
+2025-02-19 19:58:46	INFO	exportfits::::casa	##########################################
