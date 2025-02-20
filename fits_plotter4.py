@@ -53,12 +53,22 @@ class FITSPlotter:
     def plot(self, save_as=None, title=""):
         """Genera la visualización de la imagen FITS con la superposición de contornos."""
         fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': self.wcs_base})
-        im = ax.imshow(self.data_base, cmap='inferno', origin='lower', interpolation='nearest')
-        
+        # Seleccionar el cmap dependiendo del tipo de imagen
+        if self.moment in ['continuo', 'm0']:
+            cmap = 'inferno'
+        elif self.moment in ['m1', 'm2']:
+            cmap = 'rainbow'
+        else:
+            cmap = 'inferno'  # Valor por defecto en caso de que no haya momento definido
+        im = ax.imshow(self.data_base, cmap=cmap, origin='lower', interpolation='nearest')
+
+   
         # Dibujar los contornos
         levels = np.linspace(np.nanmin(self.data_contour), np.nanmax(self.data_contour), 7)  # Ajusta el número de niveles si es necesario
         #ax.contour(self.data_contour, levels=levels, colors='white', linewidths=1.5, alpha=0.8) #COMENTADO PARA LA REPROYECCIÓN
         ax.contour(self.reprojected_contour, levels=levels, colors='white', linewidths=1.5, alpha=0.8)
+
+        
 
         # Dibujar el tamaño del beam en la esquina inferior izquierda dentro del mapa
         bmaj = self.hdul_base[0].header.get("BMAJ", None)
@@ -80,6 +90,19 @@ class FITSPlotter:
         if self.region_label:
             ax.text(0.95, 0.95, self.region_label, transform=ax.transAxes, fontsize=14,
                     color='white', ha='right', va='top', bbox=dict(facecolor='black', alpha=0.5))
+        
+        ############ ESTRELLITA
+        # Convertir coordenadas ecuatoriales a coordenadas de píxeles
+        uc1_coords = SkyCoord(ra='18h20m24.82s', dec='-16d11m34.9s', frame='icrs')
+        x_pix, y_pix = self.wcs_base.world_to_pixel(uc1_coords)
+        
+        # Agregar la estrellita en la ubicación de UC1 con solo el borde (vacía por dentro)
+        ax.scatter(x_pix, y_pix, facecolors='none', edgecolors='cyan', marker='*', s=250, linewidths=1.5, zorder=10)
+        
+        # Agregar la etiqueta sin fondo y en letra negra
+        ax.annotate("UC1", (x_pix + 5, y_pix + 5), color='cyan', fontsize=12, weight='bold', zorder=11)
+
+        ############
 
         # Configuración de ejes
         ax.set_xlabel('Ascensión Recta (RA)')
