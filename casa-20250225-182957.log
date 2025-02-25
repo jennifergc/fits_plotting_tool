@@ -1,0 +1,15 @@
+2025-02-25 18:29:58	INFO	::casa	
+2025-02-25 18:29:58	INFO	::casa	data_update: version installed or checked less than 1 day ago, nothing updated or checked
+2025-02-25 18:30:00	INFO	::casa	measures_update ... acquiring the lock ... 
+2025-02-25 18:30:00	SEVERE	::casa	lock file is not empty : /home/jennifer/.casa/data/data_update.lock
+2025-02-25 18:30:00	SEVERE	::casa	The lock file at /home/jennifer/.casa/data is not empty.
+2025-02-25 18:30:00	SEVERE	::casa	A previous attempt to update path may have failed or exited prematurely.
+2025-02-25 18:30:00	SEVERE	::casa	Remove the lock file and set force to True with the desired version (default to most recent).
+2025-02-25 18:30:00	SEVERE	::casa	It may be best to completely repopulate path using pull_data and measures_update.
+2025-02-25 18:30:00	SEVERE	::casa	
+2025-02-25 18:30:00	SEVERE	::casa	lock file is not empty : /home/jennifer/.casa/data/data_update.lock
+2025-02-25 18:30:00	SEVERE	::casa	visit https://casadocs.readthedocs.io/en/stable/notebooks/external-data.html for more information
+2025-02-25 18:30:00	SEVERE	::casa	
+2025-02-25 18:30:00	INFO	::casa	
+2025-02-25 18:30:00	INFO	::casa	Python version 3.10.12
+2025-02-25 18:30:00	INFO	::casa	CASA Version MODULAR 6.6.5.31

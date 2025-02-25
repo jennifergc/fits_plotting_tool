@@ -1,114 +1,136 @@
-#%%writefile fits_plotter.py
+import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy.wcs import WCS
-import numpy as np
-import matplotlib as mpl
-from matplotlib.ticker import MaxNLocator
+from astropy.coordinates import SkyCoord
+import astropy.units as u
+from matplotlib.patches import Ellipse
+from reproject import reproject_interp ### PARA LA REPROYECCIÓN
+
 
 class FITSPlotter:
-    """
-    Clase para visualizar imágenes FITS y superponer contornos opcionalmente.
-    
-    Atributos:
-        image_fits (str): Ruta del archivo FITS de la imagen base.
-        contour_fits (str, opcional): Ruta del archivo FITS de los contornos (si se desea).
-        sigma (float): Escalado de los niveles de contorno (valor por defecto 3e-3).
-    
-    Métodos:
-        - plot(): Grafica la imagen y los contornos si están disponibles.
-        - close(): Cierra los archivos FITS abiertos.
-    """
-    def __init__(self, image_fits, contour_fits=None, sigma=3e-3):
+    def __init__(self, image_fits, contour_fits=None, sigma=3e-3, moment=None, region_label=None):
         """
-        Inicializa la clase cargando los archivos FITS.
-
         Parámetros:
-            image_fits (str): Ruta al archivo FITS de la imagen base.
-            contour_fits (str, opcional): Ruta al archivo FITS de los contornos.
-            sigma (float, opcional): Factor de escala para los contornos.
+            image_fits (str): Archivo FITS de la imagen base.
+            contour_fits (str, opcional): Archivo FITS de los contornos (puede ser None).
+            sigma (float, opcional): Factor de escala para el mapa.
+            moment (str, opcional): Tipo de momento ('m0', 'm1', 'm2', 'continuo').
+            region_label (str, opcional): Nombre de la región para mostrar en la imagen.
         """
-        self.image_fits = image_fits  # Guarda la ruta del archivo de imagen
-        self.contour_fits = contour_fits  # Guarda la ruta del archivo de contornos (si se proporciona)
-        self.sigma = sigma  # Define el nivel de escala para los contornos
+        self.image_fits = image_fits
+        self.contour_fits = contour_fits
+        self.sigma = sigma
+        self.moment = moment  
+        self.region_label = region_label  
 
-        # Abrimos el archivo FITS de la imagen principal
+        # Cargar la imagen base
         self.hdul_base = fits.open(self.image_fits)
-        # Extraemos los datos de la imagen principal (se asume un formato de 4 dimensiones)
-        self.data_base = self.hdul_base[0].data[0, 0, :, :]
-        # Extraemos la información de coordenadas espaciales (WCS)
-        self.wcs_base = WCS(self.hdul_base[0].header).celestial  
-
-        # Si se proporciona un archivo de contorno, también lo abrimos
+        self.data_base = self.hdul_base[0].data.squeeze()
+        self.wcs_base = WCS(self.hdul_base[0].header, naxis=2)
+        
+        # Extraer parámetros del beam de la imagen base
+        self.beam_base = self.get_beam_params(self.hdul_base[0].header)
+        
+        # Cargar la imagen de contornos solo si se proporciona
         if self.contour_fits:
             self.hdul_contour = fits.open(self.contour_fits)
-            self.data_contour = self.hdul_contour[0].data[0, 0, :, :]
-            self.wcs_contour = WCS(self.hdul_contour[0].header).celestial
+            self.data_contour = self.hdul_contour[0].data.squeeze()
+            self.wcs_contour = WCS(self.hdul_contour[0].header, naxis=2)
+
+            # Reproyección de los contornos a la imagen base
+            shape_out = (self.data_base.shape[-2], self.data_base.shape[-1])
+            self.reprojected_contour, _ = reproject_interp(
+                (self.data_contour, self.wcs_contour), self.wcs_base, shape_out=shape_out
+            )
+
+            # Extraer parámetros del beam de los contornos
+            self.beam_contour = self.get_beam_params(self.hdul_contour[0].header)
         else:
-            self.data_contour = None  # Si no hay contorno, asignamos None
+            self.reprojected_contour = None  # No hay contornos
+            self.beam_contour = None  # No hay beam de contornos
 
-    def plot(self, contour_levels=None, save_as=None, title="Mapa de Intensidad", object_name="M17"):
+    def get_beam_params(self, header):
         """
-        Genera una imagen FITS hermosa y con estilo :D
-
-        Parámetros:
-        - contour_levels (list, opcional): Lista de niveles de contorno en unidades de sigma.
-        - save_as (str, opcional): Nombre del archivo para guardar la imagen.
-        - title (str, opcional): Título de la imagen.
-        - object_name (str, opcional): Nombre del objeto astronómico.
+        Extrae los parámetros del beam (BMAJ, BMIN, BPA) de un header FITS.
+        Retorna un diccionario con los valores si existen, de lo contrario, None.
         """
+        try:
+            bmaj = header['BMAJ'] * 3600  # Convertir de grados a arcsec
+            bmin = header['BMIN'] * 3600
+            bpa = header['BPA']
+            return {'bmaj': bmaj, 'bmin': bmin, 'bpa': bpa}
+        except KeyError:
+            return None  # No hay información del beam
 
-        # Configuración de estilo para publicaciones científicas
-        mpl.rcParams.update({
-            "font.family": "serif",  # Fuente tipo serif
-            "text.usetex": False,  # Usa LaTeX si es necesario
-            "axes.labelsize": 16,  # Tamaño de etiqueta de ejes
-            "axes.titlesize": 18,  # Tamaño de título
-            "xtick.labelsize": 14,  # Tamaño de ticks en X
-            "ytick.labelsize": 14,  # Tamaño de ticks en Y
-            "legend.fontsize": 14,  # Tamaño de fuente en leyenda
-            "figure.dpi": 300  # Alta resolución
-        })
- 
-        # Crear la figura y ajustar tamaño
+    def plot(self, save_as=None, title=""):
+        """Genera la visualización de la imagen FITS con la superposición de contornos (si existen) y beams."""
         fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': self.wcs_base})
 
-        # Ajustar colores
-        im = ax.imshow(self.data_base, cmap='inferno', origin='lower', interpolation='nearest')
+        # Determinar colores según el tipo de momento
+        if self.moment in ['m0', 'continuo']:
+            cmap_base = 'gnuplot2'
+            contour_color = 'white'  # Contornos blancos
+            star_color = 'lawngreen'  # Estrellita y label amarillo oscuro
+        elif self.moment in ['m1', 'm2']:
+            cmap_base = 'jet'
+            contour_color = 'black'  # Contornos negros
+            star_color = 'fuchsia'  # Estrellita y label amarillo oscuro
+        else:
+            cmap_base = 'gnuplot2'
+            contour_color = 'white'  # Por defecto, contornos blancos
+            star_color = 'yellow'  # Por defecto, amarillo normal
 
-        # Agregar contornos si están disponibles
-        if self.data_contour is not None and contour_levels:
-            contour_levels = np.array(contour_levels) * self.sigma
-            ax.contour(self.data_contour, levels=contour_levels, colors='white', linewidths=1,
-                       transform=ax.get_transform(self.wcs_contour))
+        # Mostrar la imagen base
+        im = ax.imshow(self.data_base, origin='lower', cmap=cmap_base)
 
-        # Configuración de ejes y escalas
-        ax.set_xlabel('Ascensión Recta (RA)', fontsize=16)
-        ax.set_ylabel('Declinación (Dec)', fontsize=16)
-        ax.tick_params(axis="both", direction="in", which="both", length=6, width=1.5)
+        # Dibujar contornos solo si hay datos de contornos
+        if self.reprojected_contour is not None:
+            levels = np.linspace(np.nanmin(self.data_contour), np.nanmax(self.data_contour), 7)
+            ax.contour(self.reprojected_contour, levels=levels, colors=contour_color, linewidths=1.5, alpha=0.8)
 
-        # Agregar barra de color con etiquetas
-        cbar = plt.colorbar(im, ax=ax, pad=0.05)
-        cbar.set_label('Intensidad (Jy/beam)', fontsize=14)
+        # Dibujar el beam de la imagen base en la esquina inferior izquierda
+        self.plot_beam(ax, self.beam_base, 'white', position_factor=0.1)
 
-        # Agregar anotaciones con el nombre del objeto (OPCIONAL)
-        ax.text(0.05, 0.95, f"{object_name}", transform=ax.transAxes, fontsize=16, fontweight='bold',
-                color='white', bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+        # Dibujar el beam de los contornos en la esquina inferior derecha si existen
+        if self.beam_contour:
+            self.plot_beam(ax, self.beam_contour, 'blue', position_factor=0.2)
 
-        # Agregar título y configurar límites de ejes
-        plt.title(title, fontsize=18)
+        # Si ingresé un nombre para la región, mostrarlo en la imagen
+        if self.region_label:
+            ax.text(0.95, 0.95, self.region_label, transform=ax.transAxes, fontsize=14,
+                    color='white', ha='right', va='top', bbox=dict(facecolor='black', alpha=0.5))
 
-        # Guardar la imagen si se especifica un archivo
+        ############ ESTRELLITA
+        # Convertir coordenadas ecuatoriales a coordenadas de píxeles
+        uc1_coords = SkyCoord(ra='18h20m24.82s', dec='-16d11m34.9s', frame='icrs')
+        x_pix, y_pix = self.wcs_base.world_to_pixel(uc1_coords)
+        
+        # Agregar la estrellita en la ubicación de UC1 con solo el borde (vacía por dentro)
+        ax.scatter(x_pix, y_pix, facecolors='none', edgecolors=star_color, marker='*', s=250, linewidths=1.5, zorder=10)
+        
+        # Agregar la etiqueta sin fondo y en letra negra
+        ax.annotate("UC1", (x_pix + 5, y_pix + 5), color=star_color, fontsize=12, weight='bold', zorder=11)
+
+        # Configuración de ejes
+        ax.set_xlabel('Ascensión Recta (RA)')
+        ax.set_ylabel('Declinación (Dec)')
+        plt.colorbar(im, ax=ax, pad=0.05, label="Intensidad (Jy/beam)")
+        plt.title(title)
+
         if save_as:
             plt.savefig(save_as, dpi=300, bbox_inches='tight')
-            print(f"Imagen guardada como {save_as}")
+            print(f" Imagen guardada como {save_as}")
 
-        # Mostrar la imagen
         plt.show()
 
-    def close(self):
-        """Cierra los archivos FITS abiertos."""
-        self.hdul_base.close()
-        if self.contour_fits:
-            self.hdul_contour.close()
-        print("Archivos FITS cerrados.")
+    def plot_beam(self, ax, beam_params, color, position_factor=0.1):
+        """Dibuja el beam en la posición especificada dentro del mapa."""
+        if beam_params:
+            xlim = ax.get_xlim()
+            ylim = ax.get_ylim()
+            beam_x = xlim[0] + position_factor * (xlim[1] - xlim[0])
+            beam_y = ylim[0] + position_factor * (ylim[1] - ylim[0])
+            beam_ellipse = Ellipse((beam_x, beam_y), width=beam_params['bmin'], height=beam_params['bmaj'],
+                                   angle=beam_params['bpa'], edgecolor=color, facecolor='none', lw=2)
+            ax.add_patch(beam_ellipse)

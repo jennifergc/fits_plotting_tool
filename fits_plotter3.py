@@ -37,7 +37,7 @@ class FITSPlotter:
     def plot(self, save_as=None, title=""):
         """Genera la visualización de la imagen FITS con tamaño del beam correctamente ubicado y nombre de la región."""
         fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': self.wcs_base})
-        im = ax.imshow(self.data_base, cmap='inferno', origin='lower', interpolation='nearest')
+        im = ax.imshow(self.data_base, cmap='gnuplot2', origin='lower', interpolation='nearest')
 
         # Dibujar el tamaño del beam en la esquina inferior izquierda dentro del mapa
         bmaj = self.hdul_base[0].header.get("BMAJ", None)

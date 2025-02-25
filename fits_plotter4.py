@@ -53,20 +53,28 @@ class FITSPlotter:
     def plot(self, save_as=None, title=""):
         """Genera la visualización de la imagen FITS con la superposición de contornos."""
         fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': self.wcs_base})
-        # Seleccionar el cmap dependiendo del tipo de imagen
-        if self.moment in ['continuo', 'm0']:
-            cmap = 'inferno'
+        # Elegir el colormap según el tipo de momento
+        if self.moment in ['m0', 'continuo']:
+            cmap_base = 'gnuplot2'
+            contour_color = 'white'  # Contornos blancos
+            star_color = 'fuchsia'  # Estrellita y label amarillo oscuro
         elif self.moment in ['m1', 'm2']:
-            cmap = 'rainbow'
+            cmap_base = 'jet'
+            contour_color = 'black'  # Contornos negros
+            star_color = 'fuchsia'  # Estrellita y label amarillo oscuro
         else:
-            cmap = 'inferno'  # Valor por defecto en caso de que no haya momento definido
-        im = ax.imshow(self.data_base, cmap=cmap, origin='lower', interpolation='nearest')
+            cmap_base = 'gnuplot2'
+            contour_color = 'white'  # Por defecto, contornos blancos
+            star_color = 'yellow'  # Por defecto, amarillo normal
+
+        # Mostrar la imagen base
+        im = ax.imshow(self.data_base, origin='lower', cmap=cmap_base)
 
    
         # Dibujar los contornos
         levels = np.linspace(np.nanmin(self.data_contour), np.nanmax(self.data_contour), 7)  # Ajusta el número de niveles si es necesario
         #ax.contour(self.data_contour, levels=levels, colors='white', linewidths=1.5, alpha=0.8) #COMENTADO PARA LA REPROYECCIÓN
-        ax.contour(self.reprojected_contour, levels=levels, colors='white', linewidths=1.5, alpha=0.8)
+        ax.contour(self.reprojected_contour, levels=levels, colors=contour_color, linewidths=1.5, alpha=0.8)
 
         
 
@@ -97,10 +105,10 @@ class FITSPlotter:
         x_pix, y_pix = self.wcs_base.world_to_pixel(uc1_coords)
         
         # Agregar la estrellita en la ubicación de UC1 con solo el borde (vacía por dentro)
-        ax.scatter(x_pix, y_pix, facecolors='none', edgecolors='cyan', marker='*', s=250, linewidths=1.5, zorder=10)
+        ax.scatter(x_pix, y_pix, facecolors='none', edgecolors=star_color, marker='*', s=250, linewidths=1.5, zorder=10)
         
         # Agregar la etiqueta sin fondo y en letra negra
-        ax.annotate("UC1", (x_pix + 5, y_pix + 5), color='cyan', fontsize=12, weight='bold', zorder=11)
+        ax.annotate("UC1", (x_pix + 5, y_pix + 5), color=star_color, fontsize=12, weight='bold', zorder=11)
 
         ############
 
