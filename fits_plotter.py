@@ -114,7 +114,7 @@ class FITSPlotter:
                     bbox=dict(facecolor='black', alpha=0.5))
 
         ############ ESTRELLITA UC1
-        uc1_coords = SkyCoord(ra='18h20m24.82s', dec='-16d11m34.9s', frame='icrs')
+        uc1_coords = SkyCoord(ra='18h20m24.821s', dec='-16d11m35.02s', frame='icrs')
         x_pix, y_pix = self.wcs_base.world_to_pixel(uc1_coords)
         ax.scatter(x_pix, y_pix, facecolors='none', edgecolors=star_color, marker='*',
                    s=250, linewidths=1.5, zorder=10)
@@ -122,6 +122,48 @@ class FITSPlotter:
                     weight='bold', zorder=11)
         ############
 
+        # ——— LÍNEA DE PA = 126° ———
+        pa = 126  # ángulo en grados
+        length = 30  # longitud de la línea, en pixeles (ajústalo a tu gusto)
+        theta = np.deg2rad(pa)
+        dx = length * np.sin(theta)
+        dy = length * np.cos(theta)
+        x1, y1 = x_pix - dx, y_pix - dy
+        x2, y2 = x_pix + dx, y_pix + dy
+        # Dibujar línea gris punteada en coordenadas de píxel
+        ax.plot([x1, x2], [y1, y2],
+                transform=ax.get_transform('pixel'),
+                color='gray', linestyle='--', linewidth=1)
+        # Etiqueta con el valor del ángulo
+        ax.text(x_pix - 0.8*dx, y_pix - 0.8*dy,
+                f"PA={pa}°",
+                transform=ax.get_transform('pixel'),
+                color='gray', fontsize=12,
+                #rotation=pa,
+                rotation_mode='anchor')
+        # ————————————————————————
+        # ——— LÍNEA DE PA = 216° ———
+        pa = 216  # ángulo en grados
+        length = 30  # longitud de la línea, en pixeles (ajústalo a tu gusto)
+        theta = np.deg2rad(pa)
+        dx = length * np.sin(theta)
+        dy = length * np.cos(theta)
+        x1, y1 = x_pix - dx, y_pix - dy
+        x2, y2 = x_pix + dx, y_pix + dy
+        # Dibujar línea gris punteada en coordenadas de píxel
+        ax.plot([x1, x2], [y1, y2],
+                transform=ax.get_transform('pixel'),
+                color='gray', linestyle='--', linewidth=1)
+        # Etiqueta con el valor del ángulo
+        ax.text(x_pix - 0.55*dx, y_pix -0.4*dy,
+                f"PA={pa}°",
+                transform=ax.get_transform('pixel'),
+                color='gray', fontsize=12,
+                #rotation=pa,
+                rotation_mode='anchor')
+        # ————————————————————————
+
+        
         ax.set_xlabel('Ascensión Recta (RA)')
         ax.set_ylabel('Declinación (Dec)')
         plt.colorbar(im, ax=ax, pad=0.05, label=self.colorbar_label)
