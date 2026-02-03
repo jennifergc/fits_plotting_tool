@@ -98,7 +98,8 @@ if method == "sigma":
 
 elif method == "imax":
     i_max = stats['max'][0]
-    factors = [0.1, 0.2, 0.4, 0.5, 0.7, 0.9]
+    #factors = [0.1, 0.2, 0.4, 0.5, 0.7, 0.9]
+    factors = [0.2, 0.4, 0.5, 0.7, 0.9]
     contour_levels = [f * i_max for f in factors]
     print(f"Niveles de contorno basados en I_max={i_max}: {contour_levels}", '\n')
 
